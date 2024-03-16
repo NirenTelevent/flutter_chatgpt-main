@@ -1,0 +1,37 @@
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'hive_model/chat_item.dart';
+import 'hive_model/message_item.dart';
+import 'hive_model/message_role.dart';
+import 'screens/home.dart';
+
+void main() async {
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Ensure Flutter binding is initialized
+  await Hive.initFlutter();
+  Hive.registerAdapter(ChatItemAdapter());
+  Hive.registerAdapter(MessageItemAdapter());
+  Hive.registerAdapter(MessageRoleAdapter());
+  await Hive.openBox('chats');
+  await Hive.openBox('messages');
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ChatGPT',
+      theme: ThemeData(primarySwatch: Colors.green, useMaterial3: true),
+      darkTheme: ThemeData.dark(useMaterial3: true),
+      themeMode: ThemeMode.system,
+      home: const Home(),
+      debugShowCheckedModeBanner:
+          false, // Toggle debugShowCheckedModeBanner based on kDebugMode
+    );
+  }
+}
